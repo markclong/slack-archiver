@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Search{% if query %}: {{ query }}{% endif %} - Slack Archive{% endblock %}
+
+{% block content %}
+<div class="channel-view">
+    <header class="channel-header">
+        <h1 class="channel-title">Search Results</h1>
+    </header>
+
+    <div class="search-header">
+        <form action="{{ url_for('search') }}" method="get" class="search-form">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search messages..." class="search-input" autofocus>
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+        {% if query %}
+        <p class="search-summary">{{ messages|length }} result{{ 's' if messages|length != 1 else '' }} for "{{ query }}"</p>
+        {% endif %}
+    </div>
+
+    <div class="messages-container" id="messages-container">
+        {% if messages %}
+        <div id="messages-list">
+            {% for message in messages %}
+            <div class="message search-result" id="msg-{{ message.ts }}">
+                <div class="message-avatar">
+                    {% if message.avatar_local %}
+                        <img src="{{ url_for('media', filepath=message.avatar_local) }}" alt="{{ message.display_name or message.user_name or 'User' }}" class="avatar-img">
+                    {% else %}
+                        <div class="avatar-placeholder">{{ (message.display_name or message.user_name or 'U')[0] | upper }}</div>
+                    {% endif %}
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-author">{{ message.display_name or message.user_name or 'Unknown' }}</span>
+                        <span class="message-channel">#{{ message.channel }}</span>
+                        <a href="{{ url_for('channel', name=message.channel) }}#msg-{{ message.ts }}" class="message-time">{{ message.formatted_timestamp }}</a>
+                    </div>
+                    <div class="message-text">{{ message.formatted_text | safe }}</div>
+
+                    {% if message.files %}
+                    <div class="message-files">
+                        {% for file in message.files %}
+                            {% if file.local_path and file.mimetype and file.mimetype.startswith('image/') %}
+                                <div class="file-preview">
+                                    <img src="{{ url_for('media', filepath=file.local_path) }}" alt="{{ file.name }}" class="file-image">
+                                </div>
+                            {% elif file.local_path %}
+                                <div class="file-attachment">
+                                    <div class="file-icon">📎</div>
+                                    <div class="file-info">
+                                        <a href="{{ url_for('media', filepath=file.local_path) }}" class="file-name" download>{{ file.name }}</a>
+                                        <span class="file-type">{{ file.mimetype or 'File' }}</span>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if message.reactions %}
+                    <div class="message-reactions">
+                        {% for reaction in message.reactions %}
+                            <span class="reaction">
+                                <span class="reaction-emoji">:{{ reaction.name }}:</span>
+                                <span class="reaction-count">{{ reaction.count }}</span>
+                            </span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% elif query %}
+        <div class="no-results">
+            <p>No messages found matching "{{ query }}"</p>
+        </div>
+        {% else %}
+        <div class="no-results">
+            <p>Enter a search term above</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

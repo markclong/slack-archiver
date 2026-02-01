@@ -12,6 +12,11 @@
             <div class="workspace-header">
                 <span class="workspace-name">Slack Archive</span>
             </div>
+            <div class="sidebar-search">
+                <form action="{{ url_for('search') }}" method="get">
+                    <input type="text" name="q" placeholder="Search..." class="sidebar-search-input">
+                </form>
+            </div>
             <nav class="channel-list">
                 <div class="channel-section">
                     <span class="section-header">Channels</span>

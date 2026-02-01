@@ -139,6 +139,19 @@ def get_users(conn) -> dict:
     return {row["id"]: dict(row) for row in rows}
 
 
+def search_messages(conn, query: str, limit: int = 100) -> list:
+    """Search messages by text content."""
+    rows = conn.execute("""
+        SELECT m.*, u.name as user_name, u.display_name, u.avatar_local
+        FROM messages m
+        LEFT JOIN users u ON m.user_id = u.id
+        WHERE m.text LIKE ?
+        ORDER BY m.ts DESC
+        LIMIT ?
+    """, (f"%{query}%", limit)).fetchall()
+    return [dict(row) for row in rows]
+
+
 def get_messages(conn, channel: str, before_ts: str = None, after_ts: str = None, limit: int = MESSAGES_PER_PAGE) -> list:
     """Get messages for a channel with pagination."""
     query = """
@@ -296,6 +309,22 @@ def load_more(name: str):
         "has_more": has_more,
         "oldest_ts": messages[0]["ts"] if messages else None
     })
+
+
+@app.route("/search")
+def search():
+    """Search messages."""
+    query = request.args.get("q", "").strip()
+    if not query:
+        return render_template("search.html", query="", messages=[], channel_name=None)
+
+    conn = get_db()
+    users = get_users(conn)
+    messages = search_messages(conn, query)
+    messages = enrich_messages(conn, messages, users)
+    conn.close()
+
+    return render_template("search.html", query=query, messages=messages, channel_name=None)
 
 
 @app.route("/api/thread/<ts>")
