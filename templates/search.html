@@ -22,7 +22,7 @@
         {% if messages %}
         <div id="messages-list">
             {% for message in messages %}
-            <div class="message search-result" id="msg-{{ message.ts }}">
+            <a href="{{ url_for('channel_around', name=message.channel, ts=message.ts) }}" class="message search-result" id="msg-{{ message.ts }}">
                 <div class="message-avatar">
                     {% if message.avatar_local %}
                         <img src="{{ url_for('media', filepath=message.avatar_local) }}" alt="{{ message.display_name or message.user_name or 'User' }}" class="avatar-img">
@@ -34,7 +34,7 @@
                     <div class="message-header">
                         <span class="message-author">{{ message.display_name or message.user_name or 'Unknown' }}</span>
                         <span class="message-channel">#{{ message.channel }}</span>
-                        <a href="{{ url_for('channel', name=message.channel) }}#msg-{{ message.ts }}" class="message-time">{{ message.formatted_timestamp }}</a>
+                        <span class="message-time">{{ message.formatted_timestamp }}</span>
                     </div>
                     <div class="message-text">{{ message.formatted_text | safe }}</div>
 
@@ -69,7 +69,7 @@
                     </div>
                     {% endif %}
                 </div>
-            </div>
+            </a>
             {% endfor %}
         </div>
         {% elif query %}

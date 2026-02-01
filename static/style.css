@@ -204,6 +204,20 @@ body {
     padding: 8px 8px;
 }
 
+.message.highlighted {
+    background: #FFF8DC;
+    margin: 0 -8px;
+    padding: 8px 8px;
+    border-left: 3px solid #E2A300;
+    animation: highlight-fade 3s ease-out forwards;
+}
+
+@keyframes highlight-fade {
+    0% { background: #FFF8DC; }
+    70% { background: #FFF8DC; }
+    100% { background: transparent; }
+}
+
 .message-avatar {
     width: var(--avatar-size);
     height: var(--avatar-size);
@@ -596,6 +610,17 @@ body {
 .search-summary {
     color: var(--text-muted);
     font-size: 14px;
+}
+
+a.search-result {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    cursor: pointer;
+}
+
+a.search-result:hover {
+    background: var(--hover-bg);
 }
 
 .search-result .message-channel {

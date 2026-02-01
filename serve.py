@@ -272,6 +272,64 @@ def channel(name: str):
     )
 
 
+@app.route("/channel/<name>/around/<ts>")
+def channel_around(name: str, ts: str):
+    """Display channel messages centered around a specific message."""
+    conn = get_db()
+    users = get_users(conn)
+
+    # Get messages before and after the target timestamp
+    before_messages = conn.execute("""
+        SELECT m.*, u.name as user_name, u.display_name, u.avatar_local
+        FROM messages m
+        LEFT JOIN users u ON m.user_id = u.id
+        WHERE m.channel = ? AND m.thread_ts IS NULL AND m.ts < ?
+        ORDER BY m.ts DESC
+        LIMIT 25
+    """, (name, ts)).fetchall()
+    before_messages = [dict(row) for row in reversed(before_messages)]
+
+    after_messages = conn.execute("""
+        SELECT m.*, u.name as user_name, u.display_name, u.avatar_local
+        FROM messages m
+        LEFT JOIN users u ON m.user_id = u.id
+        WHERE m.channel = ? AND m.thread_ts IS NULL AND m.ts >= ?
+        ORDER BY m.ts ASC
+        LIMIT 25
+    """, (name, ts)).fetchall()
+    after_messages = [dict(row) for row in after_messages]
+
+    messages = before_messages + after_messages
+    messages = enrich_messages(conn, messages, users)
+
+    # Check if there are more messages in either direction
+    has_more_before = False
+    has_more_after = False
+    if before_messages:
+        older = conn.execute(
+            "SELECT 1 FROM messages WHERE channel = ? AND thread_ts IS NULL AND ts < ? LIMIT 1",
+            (name, before_messages[0]["ts"])
+        ).fetchone()
+        has_more_before = older is not None
+    if after_messages:
+        newer = conn.execute(
+            "SELECT 1 FROM messages WHERE channel = ? AND thread_ts IS NULL AND ts > ? LIMIT 1",
+            (name, after_messages[-1]["ts"])
+        ).fetchone()
+        has_more_after = newer is not None
+
+    conn.close()
+
+    return render_template(
+        "channel.html",
+        channel_name=name,
+        messages=messages,
+        has_more=has_more_before,
+        oldest_ts=messages[0]["ts"] if messages else None,
+        highlight_ts=ts
+    )
+
+
 @app.route("/channel/<name>/load-more")
 def load_more(name: str):
     """Load more messages (AJAX endpoint)."""
