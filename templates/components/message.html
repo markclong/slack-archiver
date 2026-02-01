@@ -1,0 +1,64 @@
+<div class="message" id="msg-{{ message.ts }}">
+    <div class="message-avatar">
+        {% if message.avatar_local %}
+            <img src="{{ url_for('media', filepath=message.avatar_local) }}" alt="{{ message.display_name or message.user_name or 'User' }}" class="avatar-img">
+        {% else %}
+            <div class="avatar-placeholder">{{ (message.display_name or message.user_name or 'U')[0] | upper }}</div>
+        {% endif %}
+    </div>
+    <div class="message-content">
+        <div class="message-header">
+            <span class="message-author">{{ message.display_name or message.user_name or 'Unknown' }}</span>
+            <span class="message-time">{{ message.formatted_time }}</span>
+        </div>
+        <div class="message-text">{{ message.formatted_text | safe }}</div>
+
+        {% if message.files %}
+        <div class="message-files">
+            {% for file in message.files %}
+                {% if file.local_path and file.mimetype and file.mimetype.startswith('image/') %}
+                    <div class="file-preview">
+                        <img src="{{ url_for('media', filepath=file.local_path) }}" alt="{{ file.name }}" class="file-image">
+                    </div>
+                {% elif file.local_path %}
+                    <div class="file-attachment">
+                        <div class="file-icon">📎</div>
+                        <div class="file-info">
+                            <a href="{{ url_for('media', filepath=file.local_path) }}" class="file-name" download>{{ file.name }}</a>
+                            <span class="file-type">{{ file.mimetype or 'File' }}</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="file-attachment unavailable">
+                        <div class="file-icon">📎</div>
+                        <div class="file-info">
+                            <span class="file-name">{{ file.name }}</span>
+                            <span class="file-type">File unavailable</span>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if message.reactions %}
+        <div class="message-reactions">
+            {% for reaction in message.reactions %}
+                <span class="reaction">
+                    <span class="reaction-emoji">:{{ reaction.name }}:</span>
+                    <span class="reaction-count">{{ reaction.count }}</span>
+                </span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if message.reply_count and message.reply_count > 0 %}
+        <div class="message-thread">
+            <a href="#" class="thread-trigger" data-thread-ts="{{ message.ts }}">
+                <span class="thread-count">{{ message.reply_count }} {{ 'reply' if message.reply_count == 1 else 'replies' }}</span>
+                <span class="thread-arrow">→</span>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>

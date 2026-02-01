@@ -1,0 +1,10 @@
+{% set last_date = namespace(value='') %}
+{% for message in messages %}
+    {% if message.date_key != last_date.value %}
+        {% set last_date.value = message.date_key %}
+        <div class="date-divider">
+            <span class="date-divider-text">{{ message.date_divider }}</span>
+        </div>
+    {% endif %}
+    {% include "components/message.html" %}
+{% endfor %}

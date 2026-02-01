@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Slack Archive{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="workspace-header">
+                <span class="workspace-name">Slack Archive</span>
+            </div>
+            <nav class="channel-list">
+                <div class="channel-section">
+                    <span class="section-header">Channels</span>
+                    <a href="{{ url_for('channel', name='general') }}" class="channel-item {% if channel_name == 'general' %}active{% endif %}">
+                        <span class="channel-hash">#</span>
+                        <span class="channel-name">general</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

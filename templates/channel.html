@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}#{{ channel_name }} - Slack Archive{% endblock %}
+
+{% block content %}
+<div class="channel-view">
+    <header class="channel-header">
+        <h1 class="channel-title">
+            <span class="channel-hash">#</span>{{ channel_name }}
+        </h1>
+    </header>
+
+    <div class="messages-container" id="messages-container">
+        {% if has_more %}
+        <div class="load-more-container" id="load-more-container">
+            <button class="load-more-btn" id="load-more-btn" data-before="{{ oldest_ts }}">
+                Load older messages
+            </button>
+        </div>
+        {% endif %}
+
+        <div id="messages-list">
+            {% include "components/messages_list.html" %}
+        </div>
+    </div>
+</div>
+
+<!-- Thread modal -->
+<div class="thread-modal" id="thread-modal">
+    <div class="thread-panel">
+        <div class="thread-header">
+            <h2>Thread</h2>
+            <button class="thread-close" id="thread-close">&times;</button>
+        </div>
+        <div class="thread-content" id="thread-content">
+            <!-- Thread replies loaded here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Load more messages
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    const loadMoreContainer = document.getElementById('load-more-container');
+    const messagesList = document.getElementById('messages-list');
+
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', async function() {
+            const beforeTs = this.dataset.before;
+            this.disabled = true;
+            this.textContent = 'Loading...';
+
+            try {
+                const response = await fetch(`/channel/{{ channel_name }}/load-more?before=${beforeTs}`);
+                const data = await response.json();
+
+                if (data.html) {
+                    // Insert new messages at the beginning
+                    messagesList.insertAdjacentHTML('afterbegin', data.html);
+
+                    if (data.has_more) {
+                        this.dataset.before = data.oldest_ts;
+                        this.disabled = false;
+                        this.textContent = 'Load older messages';
+                    } else {
+                        loadMoreContainer.remove();
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                this.disabled = false;
+                this.textContent = 'Load older messages';
+            }
+        });
+    }
+
+    // Thread modal
+    const threadModal = document.getElementById('thread-modal');
+    const threadContent = document.getElementById('thread-content');
+    const threadClose = document.getElementById('thread-close');
+
+    document.addEventListener('click', async function(e) {
+        const threadTrigger = e.target.closest('.thread-trigger');
+        if (threadTrigger) {
+            e.preventDefault();
+            const threadTs = threadTrigger.dataset.threadTs;
+
+            threadModal.classList.add('open');
+            threadContent.innerHTML = '<div class="loading">Loading thread...</div>';
+
+            try {
+                const response = await fetch(`/api/thread/${threadTs}`);
+                const data = await response.json();
+                threadContent.innerHTML = data.html;
+            } catch (error) {
+                console.error('Error loading thread:', error);
+                threadContent.innerHTML = '<div class="error">Error loading thread</div>';
+            }
+        }
+    });
+
+    threadClose.addEventListener('click', function() {
+        threadModal.classList.remove('open');
+    });
+
+    threadModal.addEventListener('click', function(e) {
+        if (e.target === threadModal) {
+            threadModal.classList.remove('open');
+        }
+    });
+
+    // Image lightbox
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('file-image')) {
+            window.open(e.target.src, '_blank');
+        }
+    });
+</script>
+{% endblock %}

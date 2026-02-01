@@ -1,0 +1,149 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/Users/mlong/projects/slack-archiver/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	/227c65e7/
+#{{ channel_name }}	templates/channel.html	/^        <\/h1>$/;"	h
+*	static/style.css	/^* {$/;"	s
+.app-container	static/style.css	/^.app-container {$/;"	c
+.avatar-img	static/style.css	/^.avatar-img {$/;"	c
+.avatar-placeholder	static/style.css	/^.avatar-placeholder {$/;"	c
+.channel-hash	static/style.css	/^.channel-hash {$/;"	c
+.channel-header	static/style.css	/^.channel-header {$/;"	c
+.channel-item	static/style.css	/^.channel-item {$/;"	c
+.channel-item.active	static/style.css	/^.channel-item.active {$/;"	c
+.channel-item:hover	static/style.css	/^.channel-item:hover {$/;"	c
+.channel-list	static/style.css	/^.channel-list {$/;"	c
+.channel-title	static/style.css	/^.channel-title {$/;"	c
+.channel-title .channel-hash	static/style.css	/^.channel-title .channel-hash {$/;"	c
+.channel-view	static/style.css	/^.channel-view {$/;"	c
+.date-divider	static/style.css	/^.date-divider {$/;"	c
+.date-divider-text	static/style.css	/^.date-divider-text {$/;"	c
+.date-divider::after	static/style.css	/^.date-divider::after {$/;"	c
+.date-divider::before	static/style.css	/^.date-divider::before,$/;"	c
+.error	static/style.css	/^.error {$/;"	c
+.file-attachment	static/style.css	/^.file-attachment {$/;"	c
+.file-attachment.unavailable	static/style.css	/^.file-attachment.unavailable {$/;"	c
+.file-icon	static/style.css	/^.file-icon {$/;"	c
+.file-image	static/style.css	/^.file-image {$/;"	c
+.file-image:hover	static/style.css	/^.file-image:hover {$/;"	c
+.file-info	static/style.css	/^.file-info {$/;"	c
+.file-name	static/style.css	/^.file-name {$/;"	c
+.file-name:hover	static/style.css	/^.file-name:hover {$/;"	c
+.file-preview	static/style.css	/^.file-preview {$/;"	c
+.file-type	static/style.css	/^.file-type {$/;"	c
+.load-more-btn	static/style.css	/^.load-more-btn {$/;"	c
+.load-more-btn:disabled	static/style.css	/^.load-more-btn:disabled {$/;"	c
+.load-more-btn:hover	static/style.css	/^.load-more-btn:hover {$/;"	c
+.load-more-container	static/style.css	/^.load-more-container {$/;"	c
+.loading	static/style.css	/^.loading {$/;"	c
+.main-content	static/style.css	/^.main-content {$/;"	c
+.message	static/style.css	/^.message {$/;"	c
+.message-author	static/style.css	/^.message-author {$/;"	c
+.message-avatar	static/style.css	/^.message-avatar {$/;"	c
+.message-content	static/style.css	/^.message-content {$/;"	c
+.message-files	static/style.css	/^.message-files {$/;"	c
+.message-header	static/style.css	/^.message-header {$/;"	c
+.message-reactions	static/style.css	/^.message-reactions {$/;"	c
+.message-text	static/style.css	/^.message-text {$/;"	c
+.message-text .mention	static/style.css	/^.message-text .mention {$/;"	c
+.message-text a	static/style.css	/^.message-text a {$/;"	s
+.message-text a:hover	static/style.css	/^.message-text a:hover {$/;"	s
+.message-text code	static/style.css	/^.message-text code {$/;"	s
+.message-text pre	static/style.css	/^.message-text pre {$/;"	s
+.message-text pre code	static/style.css	/^.message-text pre code {$/;"	s
+.message-thread	static/style.css	/^.message-thread {$/;"	c
+.message-time	static/style.css	/^.message-time {$/;"	c
+.message:hover	static/style.css	/^.message:hover {$/;"	c
+.messages-container	static/style.css	/^    .messages-container {$/;"	c
+.messages-container	static/style.css	/^.messages-container {$/;"	c
+.reaction	static/style.css	/^.reaction {$/;"	c
+.reaction-count	static/style.css	/^.reaction-count {$/;"	c
+.reaction-emoji	static/style.css	/^.reaction-emoji {$/;"	c
+.section-header	static/style.css	/^.section-header {$/;"	c
+.sidebar	static/style.css	/^    .sidebar {$/;"	c
+.sidebar	static/style.css	/^.sidebar {$/;"	c
+.thread-arrow	static/style.css	/^.thread-arrow {$/;"	c
+.thread-close	static/style.css	/^.thread-close {$/;"	c
+.thread-close:hover	static/style.css	/^.thread-close:hover {$/;"	c
+.thread-content	static/style.css	/^.thread-content {$/;"	c
+.thread-count	static/style.css	/^.thread-count {$/;"	c
+.thread-empty	static/style.css	/^.thread-empty {$/;"	c
+.thread-header	static/style.css	/^.thread-header {$/;"	c
+.thread-header h2	static/style.css	/^.thread-header h2 {$/;"	s
+.thread-modal	static/style.css	/^    .thread-modal {$/;"	c
+.thread-modal	static/style.css	/^.thread-modal {$/;"	c
+.thread-modal.open	static/style.css	/^.thread-modal.open {$/;"	c
+.thread-panel	static/style.css	/^.thread-panel {$/;"	c
+.thread-replies	static/style.css	/^.thread-replies {$/;"	c
+.thread-reply	static/style.css	/^.thread-reply {$/;"	c
+.thread-reply .avatar-placeholder	static/style.css	/^.thread-reply .avatar-placeholder {$/;"	c
+.thread-reply .message-avatar	static/style.css	/^.thread-reply .message-avatar {$/;"	c
+.thread-trigger	static/style.css	/^.thread-trigger {$/;"	c
+.thread-trigger:hover	static/style.css	/^.thread-trigger:hover {$/;"	c
+.workspace-header	static/style.css	/^.workspace-header {$/;"	c
+.workspace-name	static/style.css	/^.workspace-name {$/;"	c
+::-webkit-scrollbar	static/style.css	/^::-webkit-scrollbar {$/;"	s
+::-webkit-scrollbar-thumb	static/style.css	/^::-webkit-scrollbar-thumb {$/;"	s
+::-webkit-scrollbar-thumb:hover	static/style.css	/^::-webkit-scrollbar-thumb:hover {$/;"	s
+::-webkit-scrollbar-track	static/style.css	/^::-webkit-scrollbar-track {$/;"	s
+:root	static/style.css	/^:root {$/;"	s
+AVATARS_DIR	archive.py	/^AVATARS_DIR = DATA_DIR \/ "avatars"$/;"	v
+CHANNEL_NAME	archive.py	/^CHANNEL_NAME = "general"$/;"	v
+DATA_DIR	archive.py	/^DATA_DIR = Path("data")$/;"	v
+DATA_DIR	serve.py	/^DATA_DIR = Path("data")$/;"	v
+DB_PATH	archive.py	/^DB_PATH = DATA_DIR \/ "slack.db"$/;"	v
+DB_PATH	serve.py	/^DB_PATH = DATA_DIR \/ "slack.db"$/;"	v
+FILES_DIR	archive.py	/^FILES_DIR = DATA_DIR \/ "files"$/;"	v
+MESSAGES_PER_PAGE	serve.py	/^MESSAGES_PER_PAGE = 50$/;"	v
+Thread	templates/channel.html	/^            <h2>Thread<\/h2>$/;"	i
+api_thread	serve.py	/^def api_thread(ts: str):$/;"	f
+app	serve.py	/^app = Flask(__name__)$/;"	v
+body	static/style.css	/^body {$/;"	s
+channel	serve.py	/^def channel(name: str):$/;"	f
+download_file	archive.py	/^def download_file(url: str, local_path: Path, headers: dict = None) -> bool:$/;"	f	typeref:typename:bool
+enrich_messages	serve.py	/^def enrich_messages(conn, messages: list, users: dict) -> list:$/;"	f	typeref:typename:list
+fetch_messages	archive.py	/^def fetch_messages(client: WebClient, conn: sqlite3.Connection, channel_id: str,$/;"	f	typeref:typename:None
+fetch_thread	archive.py	/^def fetch_thread(client: WebClient, conn: sqlite3.Connection, channel_id: str,$/;"	f	typeref:typename:int
+format_date_divider	serve.py	/^def format_date_divider(ts: str) -> str:$/;"	f	typeref:typename:str
+format_message_text	serve.py	/^def format_message_text(text: str, users: dict) -> str:$/;"	f	typeref:typename:str
+format_time	serve.py	/^def format_time(ts: str) -> str:$/;"	f	typeref:typename:str
+format_timestamp	serve.py	/^def format_timestamp(ts: str) -> str:$/;"	f	typeref:typename:str
+get_channel_id	archive.py	/^def get_channel_id(client: WebClient, channel_name: str) -> str | None:$/;"	f	typeref:typename:str|None
+get_date_key	serve.py	/^def get_date_key(ts: str) -> str:$/;"	f	typeref:typename:str
+get_db	serve.py	/^def get_db():$/;"	f
+get_files	serve.py	/^def get_files(conn, message_ts: str) -> list:$/;"	f	typeref:typename:list
+get_messages	serve.py	/^def get_messages(conn, channel: str, before_ts: str = None, after_ts: str = None, limit: int = M/;"	f	typeref:typename:list
+get_reactions	serve.py	/^def get_reactions(conn, message_ts: str) -> list:$/;"	f	typeref:typename:list
+get_sync_state	archive.py	/^def get_sync_state(conn: sqlite3.Connection, channel: str) -> tuple[str | None, str | None]:$/;"	f	typeref:typename:tuple[str|None,str|None]
+get_thread_replies	serve.py	/^def get_thread_replies(conn, thread_ts: str, users: dict) -> list:$/;"	f	typeref:typename:list
+get_users	serve.py	/^def get_users(conn) -> dict:$/;"	f	typeref:typename:dict
+index	serve.py	/^def index():$/;"	f
+init_db	archive.py	/^def init_db(conn: sqlite3.Connection) -> None:$/;"	f	typeref:typename:None
+load-more-btn	templates/channel.html	/^            <button class="load-more-btn" id="load-more-btn" data-before="{{ oldest_ts }}">$/;"	I
+load-more-container	templates/channel.html	/^        <div class="load-more-container" id="load-more-container">$/;"	I
+load_more	serve.py	/^def load_more(name: str):$/;"	f
+main	archive.py	/^def main():$/;"	f
+media	serve.py	/^def media(filepath: str):$/;"	f
+messages-container	templates/channel.html	/^    <div class="messages-container" id="messages-container">$/;"	I
+messages-list	templates/channel.html	/^        <div id="messages-list">$/;"	I
+msg-{{ message.ts }}	templates/components/message.html	/^<div class="message" id="msg-{{ message.ts }}">$/;"	I
+replace_channel	serve.py	/^    def replace_channel(match):$/;"	f	function:format_message_text	file:
+replace_link	serve.py	/^    def replace_link(match):$/;"	f	function:format_message_text	file:
+replace_mention	serve.py	/^    def replace_mention(match):$/;"	f	function:format_message_text	file:
+save_message	archive.py	/^def save_message(conn: sqlite3.Connection, msg: dict, channel: str, token: str) -> None:$/;"	f	typeref:typename:None
+slack-archiver	README.md	/^# slack-archiver$/;"	c
+sync_messages	archive.py	/^def sync_messages(client: WebClient, conn: sqlite3.Connection, channel_id: str, channel_name: st/;"	f	typeref:typename:None
+sync_users	archive.py	/^def sync_users(client: WebClient, conn: sqlite3.Connection, token: str) -> dict:$/;"	f	typeref:typename:dict
+thread-close	templates/channel.html	/^            <button class="thread-close" id="thread-close">&times;<\/button>$/;"	I
+thread-content	templates/channel.html	/^        <div class="thread-content" id="thread-content">$/;"	I
+thread-modal	templates/channel.html	/^<div class="thread-modal" id="thread-modal">$/;"	I
+update_sync_state	archive.py	/^def update_sync_state(conn: sqlite3.Connection, channel: str, oldest_ts: str | None, newest_ts: /;"	f	typeref:typename:None
+utility_processor	serve.py	/^def utility_processor():$/;"	f
+{% block title %}Slack Archive{% endblock %}	templates/base.html	/^    <title>{% block title %}Slack Archive{% endblock %}<\/title>$/;"	j
