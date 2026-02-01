@@ -9,6 +9,11 @@
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
 !_TAG_PROGRAM_VERSION	5.9.0	/227c65e7/
+"Everything is urgent"	data/files/F09RMTV290S.md	/^### "Everything is urgent"$/;"	S	section:What Should I Do Now?""Special Scenarios
+"I don't know what's most important"	data/files/F09RMTV290S.md	/^### "I don't know what's most important"$/;"	S	section:What Should I Do Now?""Special Scenarios
+"I finished today's Primary items"	data/files/F09RMTV290S.md	/^### "I finished today's Primary items"$/;"	S	section:What Should I Do Now?""Special Scenarios
+"I want to work on [something not on agenda]"	data/files/F09RMTV290S.md	/^### "I want to work on [something not on agenda]"$/;"	S	section:What Should I Do Now?""Special Scenarios
+"I'm stuck on X"	data/files/F09RMTV290S.md	/^### "I'm stuck on X"$/;"	S	section:What Should I Do Now?""Special Scenarios
 #{{ channel_name }}	templates/channel.html	/^        <\/h1>$/;"	h
 *	static/style.css	/^* {$/;"	s
 .app-container	static/style.css	/^.app-container {$/;"	c
@@ -63,12 +68,27 @@
 .message:hover	static/style.css	/^.message:hover {$/;"	c
 .messages-container	static/style.css	/^    .messages-container {$/;"	c
 .messages-container	static/style.css	/^.messages-container {$/;"	c
+.no-results	static/style.css	/^.no-results {$/;"	c
 .reaction	static/style.css	/^.reaction {$/;"	c
 .reaction-count	static/style.css	/^.reaction-count {$/;"	c
 .reaction-emoji	static/style.css	/^.reaction-emoji {$/;"	c
+.search-btn	static/style.css	/^.search-btn {$/;"	c
+.search-btn:hover	static/style.css	/^.search-btn:hover {$/;"	c
+.search-form	static/style.css	/^.search-form {$/;"	c
+.search-header	static/style.css	/^.search-header {$/;"	c
+.search-input	static/style.css	/^.search-input {$/;"	c
+.search-input:focus	static/style.css	/^.search-input:focus {$/;"	c
+.search-result .message-channel	static/style.css	/^.search-result .message-channel {$/;"	c
+.search-result .message-time	static/style.css	/^.search-result .message-time {$/;"	c
+.search-result .message-time:hover	static/style.css	/^.search-result .message-time:hover {$/;"	c
+.search-summary	static/style.css	/^.search-summary {$/;"	c
 .section-header	static/style.css	/^.section-header {$/;"	c
 .sidebar	static/style.css	/^    .sidebar {$/;"	c
 .sidebar	static/style.css	/^.sidebar {$/;"	c
+.sidebar-search	static/style.css	/^.sidebar-search {$/;"	c
+.sidebar-search-input	static/style.css	/^.sidebar-search-input {$/;"	c
+.sidebar-search-input::placeholder	static/style.css	/^.sidebar-search-input::placeholder {$/;"	c
+.sidebar-search-input:focus	static/style.css	/^.sidebar-search-input:focus {$/;"	c
 .thread-arrow	static/style.css	/^.thread-arrow {$/;"	c
 .thread-close	static/style.css	/^.thread-close {$/;"	c
 .thread-close:hover	static/style.css	/^.thread-close:hover {$/;"	c
@@ -89,6 +109,16 @@
 .thread-trigger:hover	static/style.css	/^.thread-trigger:hover {$/;"	c
 .workspace-header	static/style.css	/^.workspace-header {$/;"	c
 .workspace-name	static/style.css	/^.workspace-name {$/;"	c
+1. Current Temporal Context	data/files/F09RMTV290S.md	/^### 1. Current Temporal Context$/;"	S	section:What Should I Do Now?""Context Gathering
+1. Performance Review Impact (Primary Filter)	data/files/F09RMTV290S.md	/^### 1. Performance Review Impact (Primary Filter)$/;"	S	section:What Should I Do Now?""Decision Framework
+2. Review Current Week's TODOs	data/files/F09RMTV290S.md	/^### 2. Review Current Week's TODOs$/;"	S	section:What Should I Do Now?""Context Gathering
+2. Urgency (Hard Deadlines)	data/files/F09RMTV290S.md	/^### 2. Urgency (Hard Deadlines)$/;"	S	section:What Should I Do Now?""Decision Framework
+3. Check Immediate Priorities	data/files/F09RMTV290S.md	/^### 3. Check Immediate Priorities$/;"	S	section:What Should I Do Now?""Context Gathering
+3. Stakeholder Commitments / Unblocking Others	data/files/F09RMTV290S.md	/^### 3. Stakeholder Commitments \/ Unblocking Others$/;"	S	section:What Should I Do Now?""Decision Framework
+4. Assess Recent Activity	data/files/F09RMTV290S.md	/^### 4. Assess Recent Activity$/;"	S	section:What Should I Do Now?""Context Gathering
+4. Current Context & Momentum	data/files/F09RMTV290S.md	/^### 4. Current Context & Momentum$/;"	S	section:What Should I Do Now?""Decision Framework
+5. Consider Energy and State	data/files/F09RMTV290S.md	/^### 5. Consider Energy and State$/;"	S	section:What Should I Do Now?""Context Gathering
+5. Strategic Pillar Balance	data/files/F09RMTV290S.md	/^### 5. Strategic Pillar Balance$/;"	S	section:What Should I Do Now?""Decision Framework
 ::-webkit-scrollbar	static/style.css	/^::-webkit-scrollbar {$/;"	s
 ::-webkit-scrollbar-thumb	static/style.css	/^::-webkit-scrollbar-thumb {$/;"	s
 ::-webkit-scrollbar-thumb:hover	static/style.css	/^::-webkit-scrollbar-thumb:hover {$/;"	s
@@ -96,13 +126,25 @@
 :root	static/style.css	/^:root {$/;"	s
 AVATARS_DIR	archive.py	/^AVATARS_DIR = DATA_DIR \/ "avatars"$/;"	v
 CHANNEL_NAME	archive.py	/^CHANNEL_NAME = "general"$/;"	v
+Context Gathering	data/files/F09RMTV290S.md	/^## Context Gathering$/;"	s	chapter:What Should I Do Now?
 DATA_DIR	archive.py	/^DATA_DIR = Path("data")$/;"	v
 DATA_DIR	serve.py	/^DATA_DIR = Path("data")$/;"	v
 DB_PATH	archive.py	/^DB_PATH = DATA_DIR \/ "slack.db"$/;"	v
 DB_PATH	serve.py	/^DB_PATH = DATA_DIR \/ "slack.db"$/;"	v
+Decision Framework	data/files/F09RMTV290S.md	/^## Decision Framework$/;"	s	chapter:What Should I Do Now?
+Example Output	data/files/F09RMTV290S.md	/^### Example Output$/;"	S	section:What Should I Do Now?""Recommendation Structure
 FILES_DIR	archive.py	/^FILES_DIR = DATA_DIR \/ "files"$/;"	v
+Format	data/files/F09RMTV290S.md	/^### Format$/;"	S	section:What Should I Do Now?""Recommendation Structure
+Interaction Pattern	data/files/F09RMTV290S.md	/^## Interaction Pattern$/;"	s	chapter:What Should I Do Now?
 MESSAGES_PER_PAGE	serve.py	/^MESSAGES_PER_PAGE = 50$/;"	v
+Prerequisites	data/files/F09RMTV290S.md	/^## Prerequisites$/;"	s	chapter:What Should I Do Now?
+Purpose	data/files/F09RMTV290S.md	/^## Purpose$/;"	s	chapter:What Should I Do Now?
+Recommendation Structure	data/files/F09RMTV290S.md	/^## Recommendation Structure$/;"	s	chapter:What Should I Do Now?
+Search Results	templates/search.html	/^        <h1 class="channel-title">Search Results<\/h1>$/;"	h
+Special Scenarios	data/files/F09RMTV290S.md	/^## Special Scenarios$/;"	s	chapter:What Should I Do Now?
+Success Criteria	data/files/F09RMTV290S.md	/^## Success Criteria$/;"	s	chapter:What Should I Do Now?
 Thread	templates/channel.html	/^            <h2>Thread<\/h2>$/;"	i
+What Should I Do Now?	data/files/F09RMTV290S.md	/^# What Should I Do Now?$/;"	c
 api_thread	serve.py	/^def api_thread(ts: str):$/;"	f
 app	serve.py	/^app = Flask(__name__)$/;"	v
 body	static/style.css	/^body {$/;"	s
@@ -132,12 +174,17 @@ load_more	serve.py	/^def load_more(name: str):$/;"	f
 main	archive.py	/^def main():$/;"	f
 media	serve.py	/^def media(filepath: str):$/;"	f
 messages-container	templates/channel.html	/^    <div class="messages-container" id="messages-container">$/;"	I
+messages-container	templates/search.html	/^    <div class="messages-container" id="messages-container">$/;"	I
 messages-list	templates/channel.html	/^        <div id="messages-list">$/;"	I
+messages-list	templates/search.html	/^        <div id="messages-list">$/;"	I
 msg-{{ message.ts }}	templates/components/message.html	/^<div class="message" id="msg-{{ message.ts }}">$/;"	I
+msg-{{ message.ts }}	templates/search.html	/^            <div class="message search-result" id="msg-{{ message.ts }}">$/;"	I
 replace_channel	serve.py	/^    def replace_channel(match):$/;"	f	function:format_message_text	file:
 replace_link	serve.py	/^    def replace_link(match):$/;"	f	function:format_message_text	file:
 replace_mention	serve.py	/^    def replace_mention(match):$/;"	f	function:format_message_text	file:
 save_message	archive.py	/^def save_message(conn: sqlite3.Connection, msg: dict, channel: str, token: str) -> None:$/;"	f	typeref:typename:None
+search	serve.py	/^def search():$/;"	f
+search_messages	serve.py	/^def search_messages(conn, query: str, limit: int = 100) -> list:$/;"	f	typeref:typename:list
 slack-archiver	README.md	/^# slack-archiver$/;"	c
 sync_messages	archive.py	/^def sync_messages(client: WebClient, conn: sqlite3.Connection, channel_id: str, channel_name: st/;"	f	typeref:typename:None
 sync_users	archive.py	/^def sync_users(client: WebClient, conn: sqlite3.Connection, token: str) -> dict:$/;"	f	typeref:typename:dict
