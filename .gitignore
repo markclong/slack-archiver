@@ -44,3 +44,7 @@ env/
 .DS_Store
 Thumbs.db
 tags
+bin/
+lib64
+pyvenv.cfg
+

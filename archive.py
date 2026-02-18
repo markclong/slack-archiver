@@ -3,7 +3,7 @@
 Slack Archiver - Fetches messages from #general and stores locally.
 
 Usage:
-    export SLACK_TOKEN="xoxb-your-token"
+    export SLACK_TOKEN="xoxp-your-user-token"
     python archive.py
 """
 
@@ -364,7 +364,7 @@ def main():
     token = os.environ.get("SLACK_TOKEN")
     if not token:
         print("Error: SLACK_TOKEN environment variable not set")
-        print("Usage: export SLACK_TOKEN='xoxb-your-token' && python archive.py")
+        print("Usage: export SLACK_TOKEN='xoxp-your-user-token' && python archive.py")
         return 1
 
     # Create directories

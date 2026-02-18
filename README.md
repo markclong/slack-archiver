@@ -12,7 +12,7 @@ A Python CLI tool that archives Slack messages from #general and serves them via
 ## Prerequisites
 
 - Python 3.11+
-- A Slack Bot Token with appropriate scopes
+- A Slack User Token with appropriate scopes
 
 ## Setup
 
@@ -22,33 +22,30 @@ A Python CLI tool that archives Slack messages from #general and serves them via
 pip install -r requirements.txt
 ```
 
-### 2. Create a Slack App and get a Bot Token
+### 2. Create a Slack App and get a User Token
+
+This uses a **user token** (`xoxp-`) so it authenticates as you — no bot user needed, and no need to invite anything to channels. You already have access to the channels you're in.
 
 1. Go to [api.slack.com/apps](https://api.slack.com/apps)
 2. Click **Create New App** → **From scratch**
-3. Name your app and select your workspace
+3. Name your app (e.g. "Archiver") and select your workspace
 4. Go to **OAuth & Permissions**
-5. Under **Bot Token Scopes**, add:
+5. Under **User Token Scopes** (not Bot Token Scopes), add:
    - `channels:history` - View messages in public channels
    - `channels:read` - View basic channel info
+   - `groups:history` - View messages in private channels
+   - `groups:read` - View basic private channel info
    - `users:read` - View users and their profiles
    - `files:read` - View files shared in channels
 6. Click **Install to Workspace** and authorize
-7. Copy the **Bot User OAuth Token** (starts with `xoxb-`)
+7. Copy the **User OAuth Token** (starts with `xoxp-`)
 
 ### 3. Configure the token
 
 Create a `.env` file in the project root:
 
 ```
-SLACK_TOKEN=xoxb-your-bot-token-here
-```
-
-### 4. Invite the bot to #general
-
-In Slack, go to #general and type:
-```
-/invite @YourBotName
+SLACK_TOKEN=xoxp-your-user-token-here
 ```
 
 ## Usage
