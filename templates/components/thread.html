@@ -39,8 +39,14 @@
             {% if reply.reactions %}
             <div class="message-reactions">
                 {% for reaction in reply.reactions %}
-                    <span class="reaction">
-                        <span class="reaction-emoji">:{{ reaction.name }}:</span>
+                    <span class="reaction" title=":{{ reaction.name }}:">
+                        <span class="reaction-emoji">
+                            {% if reaction.emoji_info.type == 'custom' %}
+                                <img src="{{ url_for('media', filepath=reaction.emoji_info.local_path) }}" alt=":{{ reaction.name }}:" class="custom-emoji">
+                            {% else %}
+                                {{ reaction.emoji_info.emoji }}
+                            {% endif %}
+                        </span>
                         <span class="reaction-count">{{ reaction.count }}</span>
                     </span>
                 {% endfor %}

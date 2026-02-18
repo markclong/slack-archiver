@@ -12,6 +12,7 @@ import json
 import re
 from datetime import datetime
 from pathlib import Path
+import emoji
 from flask import Flask, render_template, redirect, url_for, jsonify, send_from_directory, request
 
 # Configuration
@@ -176,7 +177,44 @@ def get_messages(conn, channel: str, before_ts: str = None, after_ts: str = None
     return [dict(row) for row in reversed(rows)]  # Reverse to show oldest first
 
 
-def get_reactions(conn, message_ts: str) -> list:
+def get_custom_emojis(conn) -> dict:
+    """Load all custom emojis from database."""
+    rows = conn.execute("SELECT name, url, local_path FROM emojis").fetchall()
+    emojis = {}
+    for row in rows:
+        emojis[row["name"]] = {"url": row["url"], "local_path": row["local_path"]}
+    # Resolve aliases
+    for name, data in list(emojis.items()):
+        if data["url"] and data["url"].startswith("alias:"):
+            alias_target = data["url"][6:]
+            if alias_target in emojis:
+                emojis[name] = emojis[alias_target]
+    return emojis
+
+
+def convert_emoji(name: str, custom_emojis: dict = None) -> dict:
+    """Convert Slack emoji shortcode to unicode emoji or custom emoji info."""
+    # Check for custom emoji first
+    if custom_emojis and name in custom_emojis:
+        local_path = custom_emojis[name].get("local_path")
+        if local_path:
+            return {"type": "custom", "local_path": local_path, "name": name}
+
+    # Try standard emoji conversion
+    converted = emoji.emojize(f":{name}:", language='alias')
+    if converted != f":{name}:":
+        return {"type": "unicode", "emoji": converted, "name": name}
+
+    # Try without underscores (Slack uses underscores, emoji lib uses hyphens sometimes)
+    converted = emoji.emojize(f":{name.replace('_', '-')}:", language='alias')
+    if converted != f":{name.replace('_', '-')}:":
+        return {"type": "unicode", "emoji": converted, "name": name}
+
+    # Return shortcode if no conversion found
+    return {"type": "text", "emoji": f":{name}:", "name": name}
+
+
+def get_reactions(conn, message_ts: str, custom_emojis: dict = None) -> list:
     """Get reactions for a message."""
     rows = conn.execute(
         "SELECT emoji_name, user_ids FROM reactions WHERE message_ts = ?",
@@ -185,8 +223,10 @@ def get_reactions(conn, message_ts: str) -> list:
     reactions = []
     for row in rows:
         user_ids = json.loads(row["user_ids"])
+        emoji_info = convert_emoji(row["emoji_name"], custom_emojis)
         reactions.append({
             "name": row["emoji_name"],
+            "emoji_info": emoji_info,
             "count": len(user_ids)
         })
     return reactions
@@ -201,7 +241,7 @@ def get_files(conn, message_ts: str) -> list:
     return [dict(row) for row in rows]
 
 
-def get_thread_replies(conn, thread_ts: str, users: dict) -> list:
+def get_thread_replies(conn, thread_ts: str, users: dict, custom_emojis: dict = None) -> list:
     """Get all replies in a thread."""
     rows = conn.execute("""
         SELECT m.*, u.name as user_name, u.display_name, u.avatar_local
@@ -214,7 +254,7 @@ def get_thread_replies(conn, thread_ts: str, users: dict) -> list:
     replies = []
     for row in rows:
         reply = dict(row)
-        reply["reactions"] = get_reactions(conn, reply["ts"])
+        reply["reactions"] = get_reactions(conn, reply["ts"], custom_emojis)
         reply["files"] = get_files(conn, reply["ts"])
         reply["formatted_text"] = format_message_text(reply["text"], users)
         reply["formatted_time"] = format_time(reply["ts"])
@@ -223,10 +263,10 @@ def get_thread_replies(conn, thread_ts: str, users: dict) -> list:
     return replies
 
 
-def enrich_messages(conn, messages: list, users: dict) -> list:
+def enrich_messages(conn, messages: list, users: dict, custom_emojis: dict = None) -> list:
     """Add reactions, files, and formatting to messages."""
     for msg in messages:
-        msg["reactions"] = get_reactions(conn, msg["ts"])
+        msg["reactions"] = get_reactions(conn, msg["ts"], custom_emojis)
         msg["files"] = get_files(conn, msg["ts"])
         msg["formatted_text"] = format_message_text(msg["text"], users)
         msg["formatted_time"] = format_time(msg["ts"])
@@ -247,10 +287,11 @@ def channel(name: str):
     """Display channel messages."""
     conn = get_db()
     users = get_users(conn)
+    custom_emojis = get_custom_emojis(conn)
 
     before_ts = request.args.get("before")
     messages = get_messages(conn, name, before_ts=before_ts)
-    messages = enrich_messages(conn, messages, users)
+    messages = enrich_messages(conn, messages, users, custom_emojis)
 
     # Check if there are more messages
     has_more = False
@@ -277,6 +318,7 @@ def channel_around(name: str, ts: str):
     """Display channel messages centered around a specific message."""
     conn = get_db()
     users = get_users(conn)
+    custom_emojis = get_custom_emojis(conn)
 
     # Get messages before and after the target timestamp
     before_messages = conn.execute("""
@@ -300,7 +342,7 @@ def channel_around(name: str, ts: str):
     after_messages = [dict(row) for row in after_messages]
 
     messages = before_messages + after_messages
-    messages = enrich_messages(conn, messages, users)
+    messages = enrich_messages(conn, messages, users, custom_emojis)
 
     # Check if there are more messages in either direction
     has_more_before = False
@@ -339,9 +381,10 @@ def load_more(name: str):
 
     conn = get_db()
     users = get_users(conn)
+    custom_emojis = get_custom_emojis(conn)
 
     messages = get_messages(conn, name, before_ts=before_ts)
-    messages = enrich_messages(conn, messages, users)
+    messages = enrich_messages(conn, messages, users, custom_emojis)
 
     # Check if there are more messages
     has_more = False
@@ -378,8 +421,9 @@ def search():
 
     conn = get_db()
     users = get_users(conn)
+    custom_emojis = get_custom_emojis(conn)
     messages = search_messages(conn, query)
-    messages = enrich_messages(conn, messages, users)
+    messages = enrich_messages(conn, messages, users, custom_emojis)
     conn.close()
 
     return render_template("search.html", query=query, messages=messages, channel_name=None)
@@ -390,7 +434,8 @@ def api_thread(ts: str):
     """Get thread replies as JSON."""
     conn = get_db()
     users = get_users(conn)
-    replies = get_thread_replies(conn, ts, users)
+    custom_emojis = get_custom_emojis(conn)
+    replies = get_thread_replies(conn, ts, users, custom_emojis)
     conn.close()
 
     # Render HTML for replies

@@ -389,6 +389,15 @@ body {
 
 .reaction-emoji {
     margin-right: 4px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.reaction-emoji .custom-emoji {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    vertical-align: middle;
 }
 
 .reaction-count {

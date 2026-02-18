@@ -25,6 +25,7 @@ DATA_DIR = Path("data")
 DB_PATH = DATA_DIR / "slack.db"
 AVATARS_DIR = DATA_DIR / "avatars"
 FILES_DIR = DATA_DIR / "files"
+EMOJIS_DIR = DATA_DIR / "emojis"
 CHANNEL_NAME = "general"
 
 
@@ -78,6 +79,13 @@ def init_db(conn: sqlite3.Connection) -> None:
             newest_ts TEXT
         );
 
+        -- Custom emoji table
+        CREATE TABLE IF NOT EXISTS emojis (
+            name TEXT PRIMARY KEY,
+            url TEXT,
+            local_path TEXT
+        );
+
         -- Indexes for performance
         CREATE INDEX IF NOT EXISTS idx_messages_channel ON messages(channel);
         CREATE INDEX IF NOT EXISTS idx_messages_thread_ts ON messages(thread_ts);
@@ -123,6 +131,53 @@ def get_channel_id(client: WebClient, channel_name: str) -> str | None:
     except SlackApiError as e:
         print(f"Error fetching channels: {e}")
     return None
+
+
+def sync_emojis(client: WebClient, conn: sqlite3.Connection) -> dict:
+    """Fetch all custom emojis from the workspace."""
+    print("Syncing custom emojis...")
+    emojis = {}
+    try:
+        response = client.emoji_list()
+        emoji_list = response.get("emoji", {})
+
+        for name, url in emoji_list.items():
+            # Skip alias emojis (they start with "alias:")
+            if url.startswith("alias:"):
+                # Store the alias reference
+                alias_target = url[6:]  # Remove "alias:" prefix
+                conn.execute("""
+                    INSERT OR REPLACE INTO emojis (name, url, local_path)
+                    VALUES (?, ?, ?)
+                """, (name, url, None))
+                emojis[name] = {"url": url, "local_path": None, "alias": alias_target}
+                continue
+
+            # Download the emoji image
+            local_path = None
+            ext = Path(url.split("?")[0]).suffix or ".png"
+            emoji_filename = f"{name}{ext}"
+            emoji_path = EMOJIS_DIR / emoji_filename
+
+            if not emoji_path.exists():
+                if download_file(url, emoji_path):
+                    local_path = f"emojis/{emoji_filename}"
+            else:
+                local_path = f"emojis/{emoji_filename}"
+
+            conn.execute("""
+                INSERT OR REPLACE INTO emojis (name, url, local_path)
+                VALUES (?, ?, ?)
+            """, (name, url, local_path))
+
+            emojis[name] = {"url": url, "local_path": local_path}
+
+        conn.commit()
+        print(f"  Synced {len(emojis)} custom emojis")
+    except SlackApiError as e:
+        print(f"Error fetching emojis: {e}")
+
+    return emojis
 
 
 def sync_users(client: WebClient, conn: sqlite3.Connection, token: str) -> dict:
@@ -371,6 +426,7 @@ def main():
     DATA_DIR.mkdir(exist_ok=True)
     AVATARS_DIR.mkdir(exist_ok=True)
     FILES_DIR.mkdir(exist_ok=True)
+    EMOJIS_DIR.mkdir(exist_ok=True)
 
     # Initialize database
     conn = sqlite3.connect(DB_PATH)
@@ -387,7 +443,10 @@ def main():
         return 1
     print(f"  Found channel: {channel_id}")
 
-    # Sync users first
+    # Sync custom emojis
+    sync_emojis(client, conn)
+
+    # Sync users
     sync_users(client, conn, token)
 
     # Sync messages
