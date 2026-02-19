@@ -265,6 +265,12 @@ body {
 .message-time {
     font-size: 12px;
     color: var(--text-muted);
+    text-decoration: none;
+}
+
+.message-time:hover {
+    text-decoration: underline;
+    color: var(--text-muted);
 }
 
 .message-text {

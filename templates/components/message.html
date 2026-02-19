@@ -9,7 +9,7 @@
     <div class="message-content">
         <div class="message-header">
             <span class="message-author">{{ message.display_name or message.user_name or 'Unknown' }}</span>
-            <span class="message-time">{{ message.formatted_time }}</span>
+            <a class="message-time" href="/channel/{{ channel_name }}/around/{{ message.ts }}" title="{{ message.formatted_timestamp }}">{{ message.formatted_time }}</a>
         </div>
         <div class="message-text">{{ message.formatted_text | safe }}</div>
 
