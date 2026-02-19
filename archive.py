@@ -76,7 +76,14 @@ def init_db(conn: sqlite3.Connection) -> None:
         CREATE TABLE IF NOT EXISTS sync_state (
             channel TEXT PRIMARY KEY,
             oldest_ts TEXT,
-            newest_ts TEXT
+            newest_ts TEXT,
+            channel_id TEXT
+        );
+
+        -- App config (workspace URL, etc.)
+        CREATE TABLE IF NOT EXISTS config (
+            key TEXT PRIMARY KEY,
+            value TEXT
         );
 
         -- Custom emoji table
@@ -93,6 +100,13 @@ def init_db(conn: sqlite3.Connection) -> None:
         CREATE INDEX IF NOT EXISTS idx_files_message_ts ON files(message_ts);
     """)
     conn.commit()
+
+    # Migrate existing sync_state table if needed
+    try:
+        conn.execute("ALTER TABLE sync_state ADD COLUMN channel_id TEXT")
+        conn.commit()
+    except sqlite3.OperationalError:
+        pass  # Column already exists
 
 
 def download_file(url: str, local_path: Path, headers: dict = None) -> bool:
@@ -240,12 +254,12 @@ def get_sync_state(conn: sqlite3.Connection, channel: str) -> tuple[str | None, 
     return None, None
 
 
-def update_sync_state(conn: sqlite3.Connection, channel: str, oldest_ts: str | None, newest_ts: str | None) -> None:
+def update_sync_state(conn: sqlite3.Connection, channel: str, oldest_ts: str | None, newest_ts: str | None, channel_id: str | None = None) -> None:
     """Update sync state."""
     conn.execute("""
-        INSERT OR REPLACE INTO sync_state (channel, oldest_ts, newest_ts)
-        VALUES (?, ?, ?)
-    """, (channel, oldest_ts, newest_ts))
+        INSERT OR REPLACE INTO sync_state (channel, oldest_ts, newest_ts, channel_id)
+        VALUES (?, ?, ?, COALESCE(?, (SELECT channel_id FROM sync_state WHERE channel = ?)))
+    """, (channel, oldest_ts, newest_ts, channel_id, channel))
     conn.commit()
 
 
@@ -370,7 +384,7 @@ def fetch_messages(client: WebClient, conn: sqlite3.Connection, channel_id: str,
             old_oldest, old_newest = get_sync_state(conn, channel_name)
             new_oldest = min(first_ts, old_oldest) if old_oldest else first_ts
             new_newest = max(last_ts, old_newest) if old_newest else last_ts
-            update_sync_state(conn, channel_name, new_oldest, new_newest)
+            update_sync_state(conn, channel_name, new_oldest, new_newest, channel_id)
 
         print(f"  Synced {message_count} messages, {thread_count} thread replies")
 
@@ -434,6 +448,16 @@ def main():
 
     # Initialize Slack client
     client = WebClient(token=token)
+
+    # Store workspace URL for building permalinks later
+    try:
+        auth_info = client.auth_test()
+        workspace_url = auth_info.get("url", "")
+        if workspace_url:
+            conn.execute("INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)", ("workspace_url", workspace_url))
+            conn.commit()
+    except SlackApiError as e:
+        print(f"Warning: Could not fetch workspace info: {e}")
 
     # Find channel ID
     print(f"Looking for #{CHANNEL_NAME} channel...")

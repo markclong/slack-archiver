@@ -9,7 +9,11 @@
     <div class="message-content">
         <div class="message-header">
             <span class="message-author">{{ message.display_name or message.user_name or 'Unknown' }}</span>
-            <a class="message-time" href="/channel/{{ channel_name }}/around/{{ message.ts }}" title="{{ message.formatted_timestamp }}">{{ message.formatted_time }}</a>
+            {% if message.slack_url %}
+            <a class="message-time" href="{{ message.slack_url }}" target="_blank" rel="noopener" title="{{ message.formatted_timestamp }}">{{ message.formatted_time }}</a>
+            {% else %}
+            <span class="message-time" title="{{ message.formatted_timestamp }}">{{ message.formatted_time }}</span>
+            {% endif %}
         </div>
         <div class="message-text">{{ message.formatted_text | safe }}</div>
 

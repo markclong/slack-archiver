@@ -134,6 +134,31 @@ def format_message_text(text: str, users: dict) -> str:
     return text
 
 
+def get_workspace_config(conn) -> dict:
+    """Load config values (workspace_url, channel IDs) from the database."""
+    config = {}
+    try:
+        rows = conn.execute("SELECT key, value FROM config").fetchall()
+        for row in rows:
+            config[row["key"]] = row["value"]
+        rows = conn.execute("SELECT channel, channel_id FROM sync_state WHERE channel_id IS NOT NULL").fetchall()
+        for row in rows:
+            config[f"channel_id:{row['channel']}"] = row["channel_id"]
+    except sqlite3.OperationalError:
+        pass  # Tables may not exist in older databases
+    return config
+
+
+def build_slack_permalink(ts: str, channel_name: str, config: dict) -> str | None:
+    """Build a Slack permalink for a message."""
+    workspace_url = config.get("workspace_url", "").rstrip("/")
+    channel_id = config.get(f"channel_id:{channel_name}")
+    if not workspace_url or not channel_id:
+        return None
+    ts_no_dot = ts.replace(".", "")
+    return f"{workspace_url}/archives/{channel_id}/p{ts_no_dot}"
+
+
 def get_users(conn) -> dict:
     """Load all users into a dict."""
     rows = conn.execute("SELECT id, name, display_name, avatar_local FROM users").fetchall()
@@ -263,7 +288,7 @@ def get_thread_replies(conn, thread_ts: str, users: dict, custom_emojis: dict = 
     return replies
 
 
-def enrich_messages(conn, messages: list, users: dict, custom_emojis: dict = None) -> list:
+def enrich_messages(conn, messages: list, users: dict, custom_emojis: dict = None, config: dict = None) -> list:
     """Add reactions, files, and formatting to messages."""
     for msg in messages:
         msg["reactions"] = get_reactions(conn, msg["ts"], custom_emojis)
@@ -273,6 +298,10 @@ def enrich_messages(conn, messages: list, users: dict, custom_emojis: dict = Non
         msg["formatted_timestamp"] = format_timestamp(msg["ts"])
         msg["date_key"] = get_date_key(msg["ts"])
         msg["date_divider"] = format_date_divider(msg["ts"])
+        if config:
+            msg["slack_url"] = build_slack_permalink(msg["ts"], msg.get("channel", ""), config)
+        else:
+            msg["slack_url"] = None
     return messages
 
 
@@ -288,10 +317,11 @@ def channel(name: str):
     conn = get_db()
     users = get_users(conn)
     custom_emojis = get_custom_emojis(conn)
+    config = get_workspace_config(conn)
 
     before_ts = request.args.get("before")
     messages = get_messages(conn, name, before_ts=before_ts)
-    messages = enrich_messages(conn, messages, users, custom_emojis)
+    messages = enrich_messages(conn, messages, users, custom_emojis, config)
 
     # Check if there are more messages
     has_more = False
@@ -319,6 +349,7 @@ def channel_around(name: str, ts: str):
     conn = get_db()
     users = get_users(conn)
     custom_emojis = get_custom_emojis(conn)
+    config = get_workspace_config(conn)
 
     # Get messages before and after the target timestamp
     before_messages = conn.execute("""
@@ -342,7 +373,7 @@ def channel_around(name: str, ts: str):
     after_messages = [dict(row) for row in after_messages]
 
     messages = before_messages + after_messages
-    messages = enrich_messages(conn, messages, users, custom_emojis)
+    messages = enrich_messages(conn, messages, users, custom_emojis, config)
 
     # Check if there are more messages in either direction
     has_more_before = False
@@ -382,9 +413,10 @@ def load_more(name: str):
     conn = get_db()
     users = get_users(conn)
     custom_emojis = get_custom_emojis(conn)
+    config = get_workspace_config(conn)
 
     messages = get_messages(conn, name, before_ts=before_ts)
-    messages = enrich_messages(conn, messages, users, custom_emojis)
+    messages = enrich_messages(conn, messages, users, custom_emojis, config)
 
     # Check if there are more messages
     has_more = False
@@ -422,8 +454,9 @@ def search():
     conn = get_db()
     users = get_users(conn)
     custom_emojis = get_custom_emojis(conn)
+    config = get_workspace_config(conn)
     messages = search_messages(conn, query)
-    messages = enrich_messages(conn, messages, users, custom_emojis)
+    messages = enrich_messages(conn, messages, users, custom_emojis, config)
     conn.close()
 
     return render_template("search.html", query=query, messages=messages, channel_name=None)
